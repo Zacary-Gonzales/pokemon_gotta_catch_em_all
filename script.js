@@ -4,6 +4,7 @@ const POKEMON_PER_PAGE = 20;
 let currentPokemonList = [];
 let allLoadedPokemon = [];
 let isSearching = false;
+let searchTimeout; // Para debounce en búsqueda (opcional, evita llamadas excesivas)
 
 // Elementos DOM
 const pokemonContainer = document.getElementById('pokemonContainer');
@@ -152,16 +153,24 @@ nextBtn.addEventListener('click', async () => {
     loadPage(currentPage + 1);
 });
 
+// Búsqueda con debounce (espera 300ms después de escribir para filtrar)
 searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.trim();
-    isSearching = query !== '';
-    currentPage = 1; // Reset a página 1 en búsqueda
-    if (isSearching && allLoadedPokemon.length === 0) {
-        showError('Primero carga algunos Pokémon navegando o desactiva la búsqueda.');
-        return;
-    }
-    loadPage(1);
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        const query = e.target.value.trim();
+        isSearching = query !== '';
+        currentPage = 1; // Reset a página 1 en búsqueda
+        if (isSearching && allLoadedPokemon.length === 0) {
+            showError('Primero carga algunos Pokémon navegando o desactiva la búsqueda.');
+            return;
+        }
+        loadPage(1);
+    }, 300);
 });
+
+// Focus inicial en el input para probar rápido
+searchInput.focus();
 
 // Carga inicial
 loadPage(1);
+
