@@ -34,6 +34,7 @@ header {
     box-shadow: var(--shadow);
     border-bottom: 2px solid var(--primary-color);
     position: relative;
+    overflow: visible; /* Asegurar que no corte el input */
 }
 
 header::before {
@@ -45,6 +46,7 @@ header::before {
     bottom: 0;
     background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
     opacity: 0.3;
+    z-index: 1; /* Bajo para no interferir con input */
 }
 
 h1 {
@@ -55,7 +57,7 @@ h1 {
     margin: 0;
     text-shadow: 0 0 20px var(--primary-color);
     position: relative;
-    z-index: 1;
+    z-index: 2; /* Sobre el ::before */
 }
 
 #searchInput {
@@ -71,6 +73,11 @@ h1 {
     color: var(--text-primary);
     transition: var(--transition);
     box-shadow: inset 0 0 10px rgba(0, 212, 255, 0.1);
+    cursor: text; /* Forzar cursor de texto */
+    pointer-events: auto; /* Asegurar interacciones */
+    z-index: 10; /* Alto para no ser cubierto */
+    position: relative; /* Para z-index */
+    user-select: text; /* Permitir selección de texto */
 }
 
 #searchInput:focus {
